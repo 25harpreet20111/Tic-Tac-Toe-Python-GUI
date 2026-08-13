@@ -24,3 +24,30 @@ Tic-Tac-Toe-Python-GUI/
 ├── TICTACTOE.py
 ├── README.md
 └── screenshot.png
+🎯 How to Play
+Player X starts the game.
+Click any empty cell to place your symbol.
+Players take turns between X and O.
+The first player to get three symbols in a row wins.
+If all cells are filled without a winner, the game ends in a draw.
+Click Restart Game to play again.
+📸 Project Preview
+
+🧠 Learning Outcomes
+
+Through this project, I practiced:
+
+Python functions
+Tkinter GUI development
+Event handling
+Lists and nested lists
+Conditional statements
+Loops
+Game logic
+Winner and draw detection
+GUI state management
+👩‍💻 Developer
+
+Harpreet Kaur
+
+Made with ❤️ using Python and Tkinter.
