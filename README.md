@@ -23,7 +23,8 @@ Tic-Tac-Toe-Python-GUI/
 │
 ├── TICTACTOE.py
 ├── README.md
-└── screenshot.png
+└──<img width="663" height="671" alt="image" src="https://github.com/user-attachments/assets/f912663e-74bc-4282-8a40-9881a9addfeb" />
+
 🎯 How to Play
 Player X starts the game.
 Click any empty cell to place your symbol.
