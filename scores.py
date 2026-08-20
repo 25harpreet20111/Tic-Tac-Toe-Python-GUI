@@ -1,49 +1,61 @@
 # scores.py
 
-import json
-import os
-
-SCORE_FILE = "scores.json"
-
 
 class ScoreManager:
 
     def __init__(self):
-        self.scores = {
-            "X": 0,
-            "O": 0,
-            "Draws": 0
-        }
-
-        self.load_scores()
-
-    def load_scores(self):
-        if os.path.exists(SCORE_FILE):
-            try:
-                with open(SCORE_FILE, "r") as file:
-                    self.scores = json.load(file)
-            except (json.JSONDecodeError, OSError):
-                pass
-
-    def add_win(self, player):
-        if player in self.scores:
-            self.scores[player] += 1
-
-        self.save_scores()
-
-    def add_draw(self):
-        self.scores["Draws"] += 1
-        self.save_scores()
-
-    def save_scores(self):
-        with open(SCORE_FILE, "w") as file:
-            json.dump(self.scores, file, indent=4)
+        self.reset_scores()
 
     def reset_scores(self):
+        """Reset all game statistics."""
+
         self.scores = {
             "X": 0,
             "O": 0,
             "Draws": 0
         }
 
-        self.save_scores()
+    def add_win(self, player):
+        """Add a win for X or O."""
+
+        if player in ("X", "O"):
+            self.scores[player] += 1
+
+    def add_draw(self):
+        """Add a draw."""
+
+        self.scores["Draws"] += 1
+
+    def get_total_games(self):
+        """Return total number of completed games."""
+
+        return (
+            self.scores["X"]
+            + self.scores["O"]
+            + self.scores["Draws"]
+        )
+
+    def get_player_win_rate(self):
+        """Return Player X win percentage."""
+
+        total_games = self.get_total_games()
+
+        if total_games == 0:
+            return 0.0
+
+        return (
+            self.scores["X"] / total_games
+        ) * 100
+
+    def get_statistics(self):
+        """Return all game statistics."""
+
+        total_games = self.get_total_games()
+
+        return {
+            "player_wins": self.scores["X"],
+            "computer_wins": self.scores["O"],
+            "draws": self.scores["Draws"],
+            "total_games": total_games,
+            "win_rate": self.get_player_win_rate()
+        }

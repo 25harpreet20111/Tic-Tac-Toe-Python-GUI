@@ -91,13 +91,15 @@ class TicTacToeGUI:
 
     def get_score_text(self):
 
-        scores = self.score_manager.scores
+         stats = self.score_manager.get_statistics()
 
-        return (
-            f"❌ X: {scores['X']}     "
-            f"⭕ O: {scores['O']}     "
-            f"😐 Draws: {scores['Draws']}"
-        )
+         return (
+        f"❌ X: {stats['player_wins']}     "
+        f"⭕ O: {stats['computer_wins']}     "
+        f"😐 Draws: {stats['draws']}     "
+        f"🎮 Games: {stats['total_games']}     "
+        f"🏆 Win Rate: {stats['win_rate']:.1f}%"
+    )
 
     # --------------------------------------------------
     # DIFFICULTY SELECTOR
