@@ -58,5 +58,17 @@
         "result": "Draw",
         "difficulty": "Hard",
         "theme": "DARK"
+    },
+    {
+        "date": "2026-08-23 18:12:59",
+        "result": "X",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 18:13:35",
+        "result": "X",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
     }
 ]
