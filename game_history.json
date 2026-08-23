@@ -1,0 +1,38 @@
+[
+    {
+        "date": "2026-08-23 17:47:10",
+        "result": "X",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 17:47:23",
+        "result": "O",
+        "difficulty": "Medium",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 17:47:45",
+        "result": "Draw",
+        "difficulty": "Hard",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 17:50:07",
+        "result": "O",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 17:50:19",
+        "result": "X",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 17:50:35",
+        "result": "Draw",
+        "difficulty": "Hard",
+        "theme": "LIGHT"
+    }
+]

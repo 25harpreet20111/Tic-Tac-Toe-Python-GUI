@@ -4,6 +4,7 @@ from tkinter import messagebox
 from game import TicTacToe
 from ai import TicTacToeAI
 from scores import ScoreManager
+from history import GameHistory
 import config
 
 
@@ -12,9 +13,11 @@ class TicTacToeGUI:
     def __init__(self, root):
 
         self.root = root
+
         self.game = TicTacToe()
         self.ai = TicTacToeAI("easy")
         self.score_manager = ScoreManager()
+        self.history_manager = GameHistory()
 
         self.buttons = []
 
@@ -22,6 +25,7 @@ class TicTacToeGUI:
         self.theme = config.CURRENT_THEME
         self.colors = self.get_theme()
 
+        # Window
         self.root.title(config.WINDOW_TITLE)
         self.root.geometry(
             f"{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}"
@@ -32,6 +36,7 @@ class TicTacToeGUI:
             bg=self.colors["BACKGROUND"]
         )
 
+        # Create UI
         self.create_header()
         self.create_scoreboard()
         self.create_difficulty_selector()
@@ -54,36 +59,39 @@ class TicTacToeGUI:
 
     def create_theme_selector(self):
 
-        theme_frame = tk.Frame(
+        self.theme_frame = tk.Frame(
             self.root,
             bg=self.colors["BACKGROUND"]
         )
 
-        theme_frame.pack(pady=5)
+        self.theme_frame.pack(pady=5)
 
-        label = tk.Label(
-            theme_frame,
+        self.theme_label = tk.Label(
+            self.theme_frame,
             text="🎨 Theme:",
             font=("Arial", 11, "bold"),
             bg=self.colors["BACKGROUND"],
             fg=self.colors["TEXT_COLOR"]
         )
 
-        label.pack(side="left", padx=5)
+        self.theme_label.pack(
+            side="left",
+            padx=5
+        )
 
         self.theme_var = tk.StringVar(
             value=self.theme.title()
         )
 
-        theme_menu = tk.OptionMenu(
-            theme_frame,
+        self.theme_menu = tk.OptionMenu(
+            self.theme_frame,
             self.theme_var,
             "Light",
             "Dark",
             command=self.change_theme
         )
 
-        theme_menu.config(
+        self.theme_menu.config(
             font=("Arial", 10, "bold"),
             width=10,
             bg=self.colors["BUTTON_BG"],
@@ -91,11 +99,13 @@ class TicTacToeGUI:
             activebackground=self.colors["BUTTON_ACTIVE"]
         )
 
-        theme_menu["menu"].config(
+        self.theme_menu["menu"].config(
             font=("Arial", 10)
         )
 
-        theme_menu.pack(side="left")
+        self.theme_menu.pack(
+            side="left"
+        )
 
     def change_theme(self, theme):
 
@@ -106,6 +116,7 @@ class TicTacToeGUI:
 
     def apply_theme(self):
 
+        # Main window
         self.root.config(
             bg=self.colors["BACKGROUND"]
         )
@@ -130,7 +141,7 @@ class TicTacToeGUI:
             fg=self.colors["TEXT_COLOR"]
         )
 
-        # Difficulty
+        # Difficulty selector
         self.difficulty_frame.config(
             bg=self.colors["BACKGROUND"]
         )
@@ -168,30 +179,31 @@ class TicTacToeGUI:
         )
 
         for row in range(3):
+
             for col in range(3):
 
                 button = self.buttons[row][col]
 
                 player = self.game.board[row][col]
 
-                if player == "":
-                    button.config(
-                        bg=self.colors["BUTTON_BG"],
-                        activebackground=self.colors["BUTTON_ACTIVE"]
-                    )
+                button.config(
+                    bg=self.colors["BUTTON_BG"],
+                    activebackground=self.colors["BUTTON_ACTIVE"],
+                    highlightbackground=self.colors["HEADER_BG"]
+                )
 
-                else:
-                    color = (
-                        self.colors["X_COLOR"]
-                        if player == "X"
-                        else self.colors["O_COLOR"]
-                    )
+                if player == "X":
 
                     button.config(
-                        bg=self.colors["BUTTON_BG"],
-                        activebackground=self.colors["BUTTON_ACTIVE"],
-                        fg=color,
-                        disabledforeground=color
+                        fg=self.colors["X_COLOR"],
+                        disabledforeground=self.colors["X_COLOR"]
+                    )
+
+                elif player == "O":
+
+                    button.config(
+                        fg=self.colors["O_COLOR"],
+                        disabledforeground=self.colors["O_COLOR"]
                     )
 
         # Status
@@ -558,6 +570,15 @@ class TicTacToeGUI:
 
             self.score_manager.add_win("X")
 
+            try:
+                self.history_manager.add_game(
+                    "X",
+                    self.difficulty_var.get(),
+                    self.theme
+                )
+            except AttributeError:
+                pass
+
             messagebox.showinfo(
                 "🏆 Game Over",
                 "Player X Wins!"
@@ -571,6 +592,15 @@ class TicTacToeGUI:
 
             self.score_manager.add_win("O")
 
+            try:
+                self.history_manager.add_game(
+                    "O",
+                    self.difficulty_var.get(),
+                    self.theme
+                )
+            except AttributeError:
+                pass
+
             messagebox.showinfo(
                 "🏆 Game Over",
                 "Computer Wins!"
@@ -581,6 +611,15 @@ class TicTacToeGUI:
         elif self.game.winner == "Draw":
 
             self.score_manager.add_draw()
+
+            try:
+                self.history_manager.add_game(
+                    "Draw",
+                    self.difficulty_var.get(),
+                    self.theme
+                )
+            except AttributeError:
+                pass
 
             messagebox.showinfo(
                 "😐 Game Over",
