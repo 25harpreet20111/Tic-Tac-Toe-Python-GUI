@@ -1,5 +1,3 @@
-# gui.py
-
 import tkinter as tk
 from tkinter import messagebox
 
@@ -14,65 +12,26 @@ class TicTacToeGUI:
     def __init__(self, root):
 
         self.root = root
-
-        # Game objects
         self.game = TicTacToe()
         self.ai = TicTacToeAI("easy")
         self.score_manager = ScoreManager()
 
-        # Store buttons
         self.buttons = []
 
         # Current theme
-        self.current_theme = "Light"
+        self.theme = config.CURRENT_THEME
+        self.colors = self.get_theme()
 
-        # Theme colors
-        self.light_theme = {
-            "BACKGROUND": "#EAF2F8",
-            "HEADER_BG": "#2E8B57",
-            "BUTTON_BG": "#A9CCE3",
-            "BUTTON_ACTIVE": "#AED6F1",
-            "TEXT_COLOR": "#1B4F72",
-            "WHITE": "#FFFFFF",
-            "RESET_BG": "#27AE60",
-            "SECONDARY_BG": "#E67E22",
-            "X_COLOR": "#2C3E50",
-            "O_COLOR": "#C0392B",
-            "WIN_COLOR": "#82E0AA",
-            "FOOTER": "#5D6D7E"
-        }
-
-        self.dark_theme = {
-            "BACKGROUND": "#17202A",
-            "HEADER_BG": "#145A32",
-            "BUTTON_BG": "#34495E",
-            "BUTTON_ACTIVE": "#2E86C1",
-            "TEXT_COLOR": "#ECF0F1",
-            "WHITE": "#FFFFFF",
-            "RESET_BG": "#239B56",
-            "SECONDARY_BG": "#D35400",
-            "X_COLOR": "#F4F6F7",
-            "O_COLOR": "#FF6B6B",
-            "WIN_COLOR": "#229954",
-            "FOOTER": "#AAB7B8"
-        }
-
-        self.colors = self.light_theme.copy()
-
-        # Window
         self.root.title(config.WINDOW_TITLE)
-
         self.root.geometry(
             f"{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}"
         )
-
         self.root.resizable(False, False)
 
         self.root.config(
             bg=self.colors["BACKGROUND"]
         )
 
-        # Create UI
         self.create_header()
         self.create_scoreboard()
         self.create_difficulty_selector()
@@ -81,6 +40,186 @@ class TicTacToeGUI:
         self.create_status()
         self.create_controls()
         self.create_footer()
+
+    # ==================================================
+    # THEME
+    # ==================================================
+
+    def get_theme(self):
+
+        if self.theme == "DARK":
+            return config.DARK_THEME.copy()
+
+        return config.LIGHT_THEME.copy()
+
+    def create_theme_selector(self):
+
+        theme_frame = tk.Frame(
+            self.root,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        theme_frame.pack(pady=5)
+
+        label = tk.Label(
+            theme_frame,
+            text="🎨 Theme:",
+            font=("Arial", 11, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        )
+
+        label.pack(side="left", padx=5)
+
+        self.theme_var = tk.StringVar(
+            value=self.theme.title()
+        )
+
+        theme_menu = tk.OptionMenu(
+            theme_frame,
+            self.theme_var,
+            "Light",
+            "Dark",
+            command=self.change_theme
+        )
+
+        theme_menu.config(
+            font=("Arial", 10, "bold"),
+            width=10,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        theme_menu["menu"].config(
+            font=("Arial", 10)
+        )
+
+        theme_menu.pack(side="left")
+
+    def change_theme(self, theme):
+
+        self.theme = theme.upper()
+        self.colors = self.get_theme()
+
+        self.apply_theme()
+
+    def apply_theme(self):
+
+        self.root.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        # Header
+        self.header.config(
+            bg=self.colors["HEADER_BG"]
+        )
+
+        self.title_label.config(
+            bg=self.colors["HEADER_BG"],
+            fg=self.colors["WHITE"]
+        )
+
+        # Scoreboard
+        self.score_frame.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        self.score_label.config(
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        )
+
+        # Difficulty
+        self.difficulty_frame.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        self.difficulty_label.config(
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        )
+
+        self.difficulty_menu.config(
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        # Theme selector
+        self.theme_frame.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        self.theme_label.config(
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        )
+
+        self.theme_menu.config(
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        # Board
+        self.board_frame.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        for row in range(3):
+            for col in range(3):
+
+                button = self.buttons[row][col]
+
+                player = self.game.board[row][col]
+
+                if player == "":
+                    button.config(
+                        bg=self.colors["BUTTON_BG"],
+                        activebackground=self.colors["BUTTON_ACTIVE"]
+                    )
+
+                else:
+                    color = (
+                        self.colors["X_COLOR"]
+                        if player == "X"
+                        else self.colors["O_COLOR"]
+                    )
+
+                    button.config(
+                        bg=self.colors["BUTTON_BG"],
+                        activebackground=self.colors["BUTTON_ACTIVE"],
+                        fg=color,
+                        disabledforeground=color
+                    )
+
+        # Status
+        self.status_label.config(
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        )
+
+        # Controls
+        self.control_frame.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        self.restart_button.config(
+            bg=self.colors["RESET_BG"],
+            fg=self.colors["WHITE"]
+        )
+
+        self.reset_score_button.config(
+            bg="#E67E22",
+            fg=self.colors["WHITE"]
+        )
+
+        # Footer
+        self.footer.config(
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["FOOTER_COLOR"]
+        )
 
     # ==================================================
     # HEADER
@@ -143,7 +282,7 @@ class TicTacToeGUI:
         )
 
     # ==================================================
-    # DIFFICULTY SELECTOR
+    # DIFFICULTY
     # ==================================================
 
     def create_difficulty_selector(self):
@@ -197,214 +336,20 @@ class TicTacToeGUI:
             side="left"
         )
 
-    # ==================================================
-    # CHANGE DIFFICULTY
-    # ==================================================
-
     def change_difficulty(self, difficulty):
 
         difficulty = difficulty.lower()
 
-        # Compatible with your current AI class
-        if hasattr(self.ai, "set_difficulty"):
-            self.ai.set_difficulty(difficulty)
-        else:
-            self.ai.difficulty = difficulty
+        self.ai.set_difficulty(difficulty)
 
         self.reset_game()
 
         self.status_label.config(
-            text=f"🤖 AI Difficulty: {difficulty.title()} 🤖"
+            text=f"🤖 AI Difficulty: {difficulty.title()}"
         )
 
     # ==================================================
-    # THEME SELECTOR
-    # ==================================================
-
-    def create_theme_selector(self):
-
-        self.theme_frame = tk.Frame(
-            self.root,
-            bg=self.colors["BACKGROUND"]
-        )
-
-        self.theme_frame.pack(pady=5)
-
-        self.theme_label = tk.Label(
-            self.theme_frame,
-            text="🎨 Theme:",
-            font=("Arial", 11, "bold"),
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["TEXT_COLOR"]
-        )
-
-        self.theme_label.pack(
-            side="left",
-            padx=5
-        )
-
-        self.theme_var = tk.StringVar(
-            value="Light"
-        )
-
-        self.theme_menu = tk.OptionMenu(
-            self.theme_frame,
-            self.theme_var,
-            "Light",
-            "Dark",
-            command=self.change_theme
-        )
-
-        self.theme_menu.config(
-            font=("Arial", 10, "bold"),
-            width=10,
-            bg=self.colors["BUTTON_BG"],
-            fg=self.colors["TEXT_COLOR"],
-            activebackground=self.colors["BUTTON_ACTIVE"]
-        )
-
-        self.theme_menu["menu"].config(
-            font=("Arial", 10)
-        )
-
-        self.theme_menu.pack(
-            side="left"
-        )
-
-    # ==================================================
-    # CHANGE THEME
-    # ==================================================
-
-    def change_theme(self, theme):
-
-        self.current_theme = theme
-
-        if theme == "Dark":
-            self.colors = self.dark_theme.copy()
-        else:
-            self.colors = self.light_theme.copy()
-
-        self.apply_theme()
-
-    # ==================================================
-    # APPLY THEME
-    # ==================================================
-
-    def apply_theme(self):
-
-        # Main window
-        self.root.config(
-            bg=self.colors["BACKGROUND"]
-        )
-
-        # Header
-        self.header.config(
-            bg=self.colors["HEADER_BG"]
-        )
-
-        self.title_label.config(
-            bg=self.colors["HEADER_BG"],
-            fg=self.colors["WHITE"]
-        )
-
-        # Scoreboard
-        self.score_frame.config(
-            bg=self.colors["BACKGROUND"]
-        )
-
-        self.score_label.config(
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["TEXT_COLOR"]
-        )
-
-        # Difficulty
-        self.difficulty_frame.config(
-            bg=self.colors["BACKGROUND"]
-        )
-
-        self.difficulty_label.config(
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["TEXT_COLOR"]
-        )
-
-        self.difficulty_menu.config(
-            bg=self.colors["BUTTON_BG"],
-            fg=self.colors["TEXT_COLOR"],
-            activebackground=self.colors["BUTTON_ACTIVE"]
-        )
-
-        # Theme
-        self.theme_frame.config(
-            bg=self.colors["BACKGROUND"]
-        )
-
-        self.theme_label.config(
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["TEXT_COLOR"]
-        )
-
-        self.theme_menu.config(
-            bg=self.colors["BUTTON_BG"],
-            fg=self.colors["TEXT_COLOR"],
-            activebackground=self.colors["BUTTON_ACTIVE"]
-        )
-
-        # Board buttons
-        for row in range(3):
-
-            for col in range(3):
-
-                button = self.buttons[row][col]
-
-                button.config(
-                    bg=self.colors["BUTTON_BG"],
-                    activebackground=self.colors["BUTTON_ACTIVE"],
-                    highlightbackground=self.colors["HEADER_BG"]
-                )
-
-                player = self.game.board[row][col]
-
-                if player == "X":
-                    button.config(
-                        fg=self.colors["X_COLOR"],
-                        disabledforeground=self.colors["X_COLOR"]
-                    )
-
-                elif player == "O":
-                    button.config(
-                        fg=self.colors["O_COLOR"],
-                        disabledforeground=self.colors["O_COLOR"]
-                    )
-
-        # Status
-        self.status_label.config(
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["TEXT_COLOR"]
-        )
-
-        # Controls
-        self.control_frame.config(
-            bg=self.colors["BACKGROUND"]
-        )
-
-        self.restart_button.config(
-            bg=self.colors["RESET_BG"],
-            fg=self.colors["WHITE"]
-        )
-
-        self.reset_score_button.config(
-            bg=self.colors["SECONDARY_BG"],
-            fg=self.colors["WHITE"]
-        )
-
-        # Footer
-        self.footer.config(
-            bg=self.colors["BACKGROUND"],
-            fg=self.colors["FOOTER"]
-        )
-
-    # ==================================================
-    # GAME BOARD
+    # BOARD
     # ==================================================
 
     def create_board(self):
@@ -414,9 +359,7 @@ class TicTacToeGUI:
             bg=self.colors["BACKGROUND"]
         )
 
-        self.board_frame.pack(
-            pady=15
-        )
+        self.board_frame.pack(pady=15)
 
         for row in range(3):
 
@@ -465,9 +408,7 @@ class TicTacToeGUI:
             fg=self.colors["TEXT_COLOR"]
         )
 
-        self.status_label.pack(
-            pady=10
-        )
+        self.status_label.pack(pady=10)
 
     # ==================================================
     # CONTROLS
@@ -480,9 +421,7 @@ class TicTacToeGUI:
             bg=self.colors["BACKGROUND"]
         )
 
-        self.control_frame.pack(
-            pady=5
-        )
+        self.control_frame.pack(pady=5)
 
         self.restart_button = tk.Button(
             self.control_frame,
@@ -496,23 +435,19 @@ class TicTacToeGUI:
             width=18
         )
 
-        self.restart_button.pack(
-            pady=5
-        )
+        self.restart_button.pack(pady=5)
 
         self.reset_score_button = tk.Button(
             self.control_frame,
             text="🗑️ Reset Scores",
             command=self.reset_scores,
-            bg=self.colors["SECONDARY_BG"],
+            bg="#E67E22",
             fg=self.colors["WHITE"],
             font=("Arial", 11, "bold"),
             width=18
         )
 
-        self.reset_score_button.pack(
-            pady=5
-        )
+        self.reset_score_button.pack(pady=5)
 
     # ==================================================
     # FOOTER
@@ -524,7 +459,7 @@ class TicTacToeGUI:
             self.root,
             text="Developed by Harpreet Kaur 💻",
             bg=self.colors["BACKGROUND"],
-            fg=self.colors["FOOTER"],
+            fg=self.colors["FOOTER_COLOR"],
             font=config.FOOTER_FONT
         )
 
@@ -548,10 +483,7 @@ class TicTacToeGUI:
         if not self.game.make_move(row, col):
             return
 
-        self.update_button(
-            row,
-            col
-        )
+        self.update_button(row, col)
 
         self.check_game_status()
 
@@ -587,15 +519,9 @@ class TicTacToeGUI:
 
         row, col = move
 
-        self.game.make_move(
-            row,
-            col
-        )
+        self.game.make_move(row, col)
 
-        self.update_button(
-            row,
-            col
-        )
+        self.update_button(row, col)
 
         self.check_game_status()
 
@@ -607,10 +533,11 @@ class TicTacToeGUI:
 
         player = self.game.board[row][col]
 
-        if player == "X":
-            color = self.colors["X_COLOR"]
-        else:
-            color = self.colors["O_COLOR"]
+        color = (
+            self.colors["X_COLOR"]
+            if player == "X"
+            else self.colors["O_COLOR"]
+        )
 
         self.buttons[row][col].config(
             text=player,
@@ -620,7 +547,7 @@ class TicTacToeGUI:
         )
 
     # ==================================================
-    # CHECK GAME STATUS
+    # GAME STATUS
     # ==================================================
 
     def check_game_status(self):
@@ -679,14 +606,12 @@ class TicTacToeGUI:
                 )
 
     # ==================================================
-    # WINNER HIGHLIGHT
+    # WINNER
     # ==================================================
 
     def highlight_winner(self, player):
 
-        winning_cells = self.game.get_winning_cells(
-            player
-        )
+        winning_cells = self.game.get_winning_cells(player)
 
         for row, col in winning_cells:
 
@@ -731,6 +656,7 @@ class TicTacToeGUI:
                 self.buttons[row][col].config(
                     text="",
                     bg=self.colors["BUTTON_BG"],
+                    activebackground=self.colors["BUTTON_ACTIVE"],
                     state="normal"
                 )
 
