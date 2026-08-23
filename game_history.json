@@ -34,5 +34,29 @@
         "result": "Draw",
         "difficulty": "Hard",
         "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 18:05:02",
+        "result": "X",
+        "difficulty": "Easy",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 18:05:26",
+        "result": "O",
+        "difficulty": "Medium",
+        "theme": "LIGHT"
+    },
+    {
+        "date": "2026-08-23 18:05:46",
+        "result": "O",
+        "difficulty": "Hard",
+        "theme": "DARK"
+    },
+    {
+        "date": "2026-08-23 18:06:02",
+        "result": "Draw",
+        "difficulty": "Hard",
+        "theme": "DARK"
     }
 ]

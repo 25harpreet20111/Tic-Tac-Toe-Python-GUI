@@ -7,11 +7,10 @@ from datetime import datetime
 
 class GameHistory:
 
-    def __init__(self, filename="game_history.json"):
+    FILE_NAME = "game_history.json"
 
-        self.filename = filename
+    def __init__(self):
         self.history = []
-
         self.load_history()
 
     # ==================================================
@@ -20,25 +19,33 @@ class GameHistory:
 
     def load_history(self):
 
-        if not os.path.exists(self.filename):
-
+        if not os.path.exists(self.FILE_NAME):
             self.history = []
-
             return
 
         try:
-
-            with open(
-                self.filename,
-                "r",
-                encoding="utf-8"
-            ) as file:
-
+            with open(self.FILE_NAME, "r", encoding="utf-8") as file:
                 self.history = json.load(file)
 
         except (json.JSONDecodeError, OSError):
-
             self.history = []
+
+    # ==================================================
+    # ADD GAME
+    # ==================================================
+
+    def add_game(self, result, difficulty, theme):
+
+        game = {
+            "date": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "result": result,
+            "difficulty": difficulty,
+            "theme": theme
+        }
+
+        self.history.append(game)
+
+        self.save_history()
 
     # ==================================================
     # SAVE HISTORY
@@ -47,13 +54,7 @@ class GameHistory:
     def save_history(self):
 
         try:
-
-            with open(
-                self.filename,
-                "w",
-                encoding="utf-8"
-            ) as file:
-
+            with open(self.FILE_NAME, "w", encoding="utf-8") as file:
                 json.dump(
                     self.history,
                     file,
@@ -61,36 +62,7 @@ class GameHistory:
                 )
 
         except OSError:
-
             pass
-
-    # ==================================================
-    # ADD GAME
-    # ==================================================
-
-    def add_game(
-        self,
-        result,
-        difficulty,
-        theme
-    ):
-
-        game_record = {
-
-            "date": datetime.now().strftime(
-                "%Y-%m-%d %H:%M:%S"
-            ),
-
-            "result": result,
-
-            "difficulty": difficulty,
-
-            "theme": theme
-        }
-
-        self.history.append(game_record)
-
-        self.save_history()
 
     # ==================================================
     # GET HISTORY
@@ -98,7 +70,7 @@ class GameHistory:
 
     def get_history(self):
 
-        return self.history
+        return self.history.copy()
 
     # ==================================================
     # CLEAR HISTORY
@@ -107,13 +79,4 @@ class GameHistory:
     def clear_history(self):
 
         self.history = []
-
         self.save_history()
-
-    # ==================================================
-    # GET TOTAL GAMES
-    # ==================================================
-
-    def get_total_games(self):
-
-        return len(self.history)
