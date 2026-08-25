@@ -40,7 +40,7 @@ class TicTacToe:
             return True
 
         # Check draw
-        if self.is_board_full():
+        if self.is_draw():
             self.winner = "Draw"
             self.game_over = True
             return True
@@ -145,4 +145,13 @@ class TicTacToe:
             self.board[row][col] != ""
             for row in range(3)
             for col in range(3)
+        )
+
+    def is_draw(self):
+        """Check whether the current game is a draw."""
+
+        return (
+            self.is_board_full()
+            and not self.check_winner("X")
+            and not self.check_winner("O")
         )
