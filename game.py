@@ -22,6 +22,10 @@ class TicTacToe:
     def make_move(self, row, col):
         """Make a move for the current player."""
 
+        # Check if the move is within bounds
+        if not (0 <= row < 3 and 0 <= col < 3):
+            return False
+
         # Game already finished
         if self.game_over:
             return False
