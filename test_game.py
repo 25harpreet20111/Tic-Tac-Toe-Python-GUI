@@ -167,7 +167,13 @@ class TestTicTacToe(unittest.TestCase):
 
         # No additional move should be allowed
         self.assertFalse(game.make_move(2, 2))
+    def test_out_of_bounds_move(self):
+        game = TicTacToe()
 
+        self.assertFalse(game.make_move(-1, 0))
+        self.assertFalse(game.make_move(3, 0))
+        self.assertFalse(game.make_move(0, 3))
+        self.assertFalse(game.make_move(0, -1))
 
 if __name__ == "__main__":
     unittest.main()
