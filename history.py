@@ -127,6 +127,19 @@ class GameHistory:
             game for game in self.history
             if game.get("difficulty") == difficulty
         ]
+
+    # ==================================================
+    # FILTER GAMES BY THEME
+    # ==================================================
+
+    def get_games_by_theme(self, theme):
+        """Return games played with the specified theme."""
+
+        return [
+            game for game in self.history
+            if game.get("theme") == theme
+        ]
+    
     # ==================================================
     # CLEAR HISTORY
     # ==================================================

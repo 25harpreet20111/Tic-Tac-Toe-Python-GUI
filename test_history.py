@@ -357,7 +357,69 @@ class TestGameHistory(unittest.TestCase):
             easy_games[1]["difficulty"],
             "Easy"
         )
+    # ==================================================
+    # FILTER GAMES BY THEME
+    # ==================================================
 
+    def test_get_games_by_theme(self):
+        """Test filtering games by theme."""
+
+        self.history.add_game(
+            "X",
+            "Easy",
+            "Light"
+        )
+
+        self.history.add_game(
+            "O",
+            "Hard",
+            "Dark"
+        )
+
+        self.history.add_game(
+            "X",
+            "Medium",
+            "Light"
+        )
+
+        self.history.add_game(
+            "Draw",
+            "Easy",
+            "Dark"
+        )
+
+        light_games = self.history.get_games_by_theme("Light")
+        dark_games = self.history.get_games_by_theme("Dark")
+
+        self.assertEqual(
+            len(light_games),
+            2
+        )
+
+        self.assertEqual(
+            len(dark_games),
+            2
+        )
+
+        self.assertEqual(
+            light_games[0]["theme"],
+            "Light"
+        )
+
+        self.assertEqual(
+            light_games[1]["theme"],
+            "Light"
+        )
+
+        self.assertEqual(
+            dark_games[0]["theme"],
+            "Dark"
+        )
+
+        self.assertEqual(
+            dark_games[1]["theme"],
+            "Dark"
+        )
 
 if __name__ == "__main__":
     unittest.main()
