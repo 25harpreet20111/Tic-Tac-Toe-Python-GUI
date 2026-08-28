@@ -127,7 +127,26 @@ class GameHistory:
             game for game in self.history
             if game.get("difficulty") == difficulty
         ]
+    # ==================================================
+    # GET DIFFICULTY STATISTICS
+    # ==================================================
 
+    def get_difficulty_statistics(self):
+        """Return the number of games played at each difficulty."""
+
+        statistics = {
+            "Easy": 0,
+            "Medium": 0,
+            "Hard": 0
+        }
+
+        for game in self.history:
+            difficulty = game.get("difficulty")
+
+            if difficulty in statistics:
+                statistics[difficulty] += 1
+
+        return statistics
     # ==================================================
     # FILTER GAMES BY THEME
     # ==================================================

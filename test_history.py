@@ -421,5 +421,19 @@ class TestGameHistory(unittest.TestCase):
             "Dark"
         )
 
+    def test_get_difficulty_statistics(self):
+        """Test difficulty-based game statistics."""
+
+        self.history.add_game("X", "Easy", "Light")
+        self.history.add_game("O", "Hard", "Dark")
+        self.history.add_game("X", "Easy", "Light")
+        self.history.add_game("Draw", "Medium", "Dark")
+        self.history.add_game("O", "Hard", "Light")
+
+        statistics = self.history.get_difficulty_statistics()
+
+        self.assertEqual(statistics["Easy"], 2)
+        self.assertEqual(statistics["Medium"], 1)
+        self.assertEqual(statistics["Hard"], 2)
 if __name__ == "__main__":
     unittest.main()
