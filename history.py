@@ -79,14 +79,6 @@ class GameHistory:
         return self.history.copy()
 
     # ==================================================
-    # CLEAR HISTORY
-    # ==================================================
-
-    def clear_history(self):
-
-        self.history = []
-        self.save_history()
-            # ==================================================
     # GET STATISTICS
     # ==================================================
 
@@ -114,3 +106,32 @@ class GameHistory:
             "o_wins": o_wins,
             "draws": draws
         }
+    # ==================================================
+    # FILTER GAMES BY RESULT
+    # ==================================================
+
+    def get_games_by_result(self, result):
+        """Return games matching the specified result."""
+
+        return [
+            game for game in self.history
+            if game.get("result") == result
+        ]
+    # ==================================================
+    # FILTER GAMES BY DIFFICULTY
+    # ==================================================
+    def get_games_by_difficulty(self, difficulty):
+        """Return games played at the specified difficulty."""
+
+        return [
+            game for game in self.history
+            if game.get("difficulty") == difficulty
+        ]
+    # ==================================================
+    # CLEAR HISTORY
+    # ==================================================
+    def clear_history(self):
+        """Clear all game history."""
+
+        self.history = []
+        self.save_history()
