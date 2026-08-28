@@ -106,6 +106,35 @@ class GameHistory:
             "o_wins": o_wins,
             "draws": draws
         }
+
+        # ==================================================
+    # GET WIN RATES
+    # ==================================================
+
+    def get_win_rates(self):
+        """Return win rates for X, O, and Draw."""
+
+        statistics = self.get_statistics()
+        total_games = statistics["total_games"]
+
+        if total_games == 0:
+            return {
+                "x_win_rate": 0.0,
+                "o_win_rate": 0.0,
+                "draw_rate": 0.0
+            }
+
+        return {
+            "x_win_rate": round(
+                (statistics["x_wins"] / total_games) * 100, 2
+            ),
+            "o_win_rate": round(
+                (statistics["o_wins"] / total_games) * 100, 2
+            ),
+            "draw_rate": round(
+                (statistics["draws"] / total_games) * 100, 2
+            )
+        }
     # ==================================================
     # FILTER GAMES BY RESULT
     # ==================================================
