@@ -18,6 +18,7 @@ class GameHistory:
     # ==================================================
 
     def load_history(self):
+        """Load saved game history from the JSON file."""
 
         if not os.path.exists(self.FILE_NAME):
             self.history = []
@@ -25,7 +26,12 @@ class GameHistory:
 
         try:
             with open(self.FILE_NAME, "r", encoding="utf-8") as file:
-                self.history = json.load(file)
+                data = json.load(file)
+
+            if isinstance(data, list):
+                self.history = data
+            else:
+                self.history = []
 
         except (json.JSONDecodeError, OSError):
             self.history = []
