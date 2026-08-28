@@ -1,6 +1,7 @@
 import unittest
 import os
 import json
+
 from history import GameHistory
 
 
@@ -24,7 +25,10 @@ class TestGameHistory(unittest.TestCase):
         GameHistory.FILE_NAME = self.original_file
 
     def test_initial_history_is_empty(self):
-        self.assertEqual(self.history.get_history(), [])
+        self.assertEqual(
+            self.history.get_history(),
+            []
+        )
 
     def test_add_game(self):
         self.history.add_game("X", "Easy", "LIGHT")
@@ -51,9 +55,15 @@ class TestGameHistory(unittest.TestCase):
     def test_history_is_saved_to_file(self):
         self.history.add_game("X", "Easy", "LIGHT")
 
-        self.assertTrue(os.path.exists(self.TEST_FILE))
+        self.assertTrue(
+            os.path.exists(self.TEST_FILE)
+        )
 
-        with open(self.TEST_FILE, "r", encoding="utf-8") as file:
+        with open(
+            self.TEST_FILE,
+            "r",
+            encoding="utf-8"
+        ) as file:
             data = json.load(file)
 
         self.assertEqual(len(data), 1)
@@ -65,7 +75,10 @@ class TestGameHistory(unittest.TestCase):
 
         self.history.clear_history()
 
-        self.assertEqual(self.history.get_history(), [])
+        self.assertEqual(
+            self.history.get_history(),
+            []
+        )
 
     def test_history_persists_after_reload(self):
         self.history.add_game("X", "Easy", "LIGHT")
@@ -79,17 +92,25 @@ class TestGameHistory(unittest.TestCase):
         self.assertEqual(records[0]["difficulty"], "Easy")
         self.assertEqual(records[0]["theme"], "LIGHT")
 
-def test_invalid_history_format(self):
-        with open(self.TEST_FILE, "w", encoding="utf-8") as file:
-            json.dump({"invalid": "format"}, file)
+    def test_invalid_history_format(self):
+        with open(
+            self.TEST_FILE,
+            "w",
+            encoding="utf-8"
+        ) as file:
+            json.dump(
+                {"invalid": "format"},
+                file
+            )
 
         history = GameHistory()
 
-        self.assertEqual(history.get_history(), [])
+        self.assertEqual(
+            history.get_history(),
+            []
+        )
 
-def test_get_statistics(self):
-        """Test game history statistics."""
-
+    def test_get_statistics(self):
         self.history.add_game("X", "Easy", "Light")
         self.history.add_game("O", "Hard", "Dark")
         self.history.add_game("Draw", "Medium", "Light")
@@ -97,10 +118,46 @@ def test_get_statistics(self):
 
         statistics = self.history.get_statistics()
 
-        self.assertEqual(statistics["total_games"], 4)
-        self.assertEqual(statistics["x_wins"], 2)
-        self.assertEqual(statistics["o_wins"], 1)
-        self.assertEqual(statistics["draws"], 1)
+        self.assertEqual(
+            statistics["total_games"],
+            4
+        )
+        self.assertEqual(
+            statistics["x_wins"],
+            2
+        )
+        self.assertEqual(
+            statistics["o_wins"],
+            1
+        )
+        self.assertEqual(
+            statistics["draws"],
+            1
+        )
+
+    def test_get_games_by_result(self):
+        self.history.add_game("X", "Easy", "Light")
+        self.history.add_game("O", "Hard", "Dark")
+        self.history.add_game("X", "Medium", "Light")
+        self.history.add_game("Draw", "Easy", "Dark")
+
+        x_games = self.history.get_games_by_result("X")
+        o_games = self.history.get_games_by_result("O")
+        draw_games = self.history.get_games_by_result("Draw")
+
+        self.assertEqual(len(x_games), 2)
+        self.assertEqual(len(o_games), 1)
+        self.assertEqual(len(draw_games), 1)
+
+        self.assertEqual(
+            x_games[0]["result"],
+            "X"
+        )
+        self.assertEqual(
+            x_games[1]["result"],
+            "X"
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
