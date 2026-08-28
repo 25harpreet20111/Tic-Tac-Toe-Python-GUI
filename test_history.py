@@ -79,6 +79,14 @@ class TestGameHistory(unittest.TestCase):
         self.assertEqual(records[0]["difficulty"], "Easy")
         self.assertEqual(records[0]["theme"], "LIGHT")
 
+def test_invalid_history_format(self):
+        with open(self.TEST_FILE, "w", encoding="utf-8") as file:
+            json.dump({"invalid": "format"}, file)
+
+        history = GameHistory()
+
+        self.assertEqual(history.get_history(), [])
+
 
 if __name__ == "__main__":
     unittest.main()
