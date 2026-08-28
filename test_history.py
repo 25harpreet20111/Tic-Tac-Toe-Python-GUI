@@ -87,6 +87,20 @@ def test_invalid_history_format(self):
 
         self.assertEqual(history.get_history(), [])
 
+def test_get_statistics(self):
+        """Test game history statistics."""
+
+        self.history.add_game("X", "Easy", "Light")
+        self.history.add_game("O", "Hard", "Dark")
+        self.history.add_game("Draw", "Medium", "Light")
+        self.history.add_game("X", "Easy", "Dark")
+
+        statistics = self.history.get_statistics()
+
+        self.assertEqual(statistics["total_games"], 4)
+        self.assertEqual(statistics["x_wins"], 2)
+        self.assertEqual(statistics["o_wins"], 1)
+        self.assertEqual(statistics["draws"], 1)
 
 if __name__ == "__main__":
     unittest.main()

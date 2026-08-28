@@ -86,3 +86,31 @@ class GameHistory:
 
         self.history = []
         self.save_history()
+            # ==================================================
+    # GET STATISTICS
+    # ==================================================
+
+    def get_statistics(self):
+        """Return summary statistics for recorded games."""
+
+        total_games = len(self.history)
+        x_wins = 0
+        o_wins = 0
+        draws = 0
+
+        for game in self.history:
+            result = game.get("result")
+
+            if result == "X":
+                x_wins += 1
+            elif result == "O":
+                o_wins += 1
+            elif result == "Draw":
+                draws += 1
+
+        return {
+            "total_games": total_games,
+            "x_wins": x_wins,
+            "o_wins": o_wins,
+            "draws": draws
+        }
