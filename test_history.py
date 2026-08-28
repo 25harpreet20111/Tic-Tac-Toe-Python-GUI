@@ -357,6 +357,7 @@ class TestGameHistory(unittest.TestCase):
             easy_games[1]["difficulty"],
             "Easy"
         )
+    
     # ==================================================
     # FILTER GAMES BY THEME
     # ==================================================
@@ -421,19 +422,97 @@ class TestGameHistory(unittest.TestCase):
             "Dark"
         )
 
+        # ==================================================
+    # DIFFICULTY STATISTICS
+    # ==================================================
+
     def test_get_difficulty_statistics(self):
         """Test difficulty-based game statistics."""
 
-        self.history.add_game("X", "Easy", "Light")
-        self.history.add_game("O", "Hard", "Dark")
-        self.history.add_game("X", "Easy", "Light")
-        self.history.add_game("Draw", "Medium", "Dark")
-        self.history.add_game("O", "Hard", "Light")
+        self.history.add_game(
+            "X",
+            "Easy",
+            "Light"
+        )
+
+        self.history.add_game(
+            "O",
+            "Hard",
+            "Dark"
+        )
+
+        self.history.add_game(
+            "X",
+            "Easy",
+            "Light"
+        )
+
+        self.history.add_game(
+            "Draw",
+            "Medium",
+            "Dark"
+        )
+
+        self.history.add_game(
+            "O",
+            "Hard",
+            "Light"
+        )
 
         statistics = self.history.get_difficulty_statistics()
 
         self.assertEqual(statistics["Easy"], 2)
         self.assertEqual(statistics["Medium"], 1)
         self.assertEqual(statistics["Hard"], 2)
+
+    # ==================================================
+    # WIN RATES
+    # ==================================================
+
+    def test_get_win_rates(self):
+        """Test win rate calculation."""
+
+        self.history.add_game(
+            "X",
+            "Easy",
+            "Light"
+        )
+
+        self.history.add_game(
+            "X",
+            "Easy",
+            "Light"
+        )
+
+        self.history.add_game(
+            "O",
+            "Hard",
+            "Dark"
+        )
+
+        self.history.add_game(
+            "Draw",
+            "Medium",
+            "Light"
+        )
+
+        rates = self.history.get_win_rates()
+
+        self.assertEqual(
+            rates["x_win_rate"],
+            50.0
+        )
+
+        self.assertEqual(
+            rates["o_win_rate"],
+            25.0
+        )
+
+        self.assertEqual(
+            rates["draw_rate"],
+            25.0
+        )
+
+
 if __name__ == "__main__":
     unittest.main()
