@@ -470,6 +470,18 @@ class TicTacToeGUI:
             width=18
         )
 
+        self.history_button = tk.Button(
+            self.control_frame,
+            text="📜 Game History",
+            command=self.show_history,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            font=("Arial", 11, "bold"),
+            width=18
+        )
+
+        self.history_button.pack(pady=5)
+
         self.statistics_button.pack(pady=5)
 
     # ==================================================
@@ -737,7 +749,120 @@ class TicTacToeGUI:
                 "Scores Reset",
                 "All scores have been reset."
             )
-        # ==================================================
+
+    # ==================================================
+    # GAME HISTORY
+    # ==================================================
+
+    def show_history(self):
+
+        history_window = tk.Toplevel(self.root)
+
+        history_window.title("📜 Game History")
+        history_window.geometry("650x500")
+        history_window.resizable(False, False)
+
+        history_window.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        # Title
+        tk.Label(
+            history_window,
+            text="📜 Game History",
+            font=("Arial", 18, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).pack(pady=15)
+
+        history = self.history_manager.get_history()
+
+        if not history:
+
+            tk.Label(
+                history_window,
+                text="No games recorded yet.",
+                font=("Arial", 12),
+                bg=self.colors["BACKGROUND"],
+                fg=self.colors["TEXT_COLOR"]
+            ).pack(pady=30)
+
+        else:
+
+            history_frame = tk.Frame(
+                history_window,
+                bg=self.colors["BACKGROUND"]
+            )
+
+            history_frame.pack(
+                fill="both",
+                expand=True,
+                padx=20,
+                pady=10
+            )
+
+            # Header
+            headers = [
+                "Date",
+                "Result",
+                "Difficulty",
+                "Theme"
+            ]
+
+            for column, header in enumerate(headers):
+
+                tk.Label(
+                    history_frame,
+                    text=header,
+                    font=("Arial", 10, "bold"),
+                    bg=self.colors["HEADER_BG"],
+                    fg=self.colors["WHITE"],
+                    width=17
+                ).grid(
+                    row=0,
+                    column=column,
+                    padx=1,
+                    pady=1
+                )
+
+            # History records
+            for row, game in enumerate(history, start=1):
+
+                values = [
+                    game.get("date", ""),
+                    game.get("result", ""),
+                    game.get("difficulty", ""),
+                    game.get("theme", "")
+                ]
+
+                for column, value in enumerate(values):
+
+                    tk.Label(
+                        history_frame,
+                        text=value,
+                        font=("Arial", 10),
+                        bg=self.colors["BUTTON_BG"],
+                        fg=self.colors["TEXT_COLOR"],
+                        width=17
+                    ).grid(
+                        row=row,
+                        column=column,
+                        padx=1,
+                        pady=1
+                    )
+
+        # Close button
+        tk.Button(
+            history_window,
+            text="Close",
+            command=history_window.destroy,
+            font=("Arial", 11, "bold"),
+            width=15,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        ).pack(pady=15)
+    # ==================================================
     # SHOW STATISTICS
     # ==================================================
 
