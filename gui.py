@@ -30,7 +30,7 @@ class TicTacToeGUI:
         self.root.geometry(
             f"{config.WINDOW_WIDTH}x{config.WINDOW_HEIGHT}"
         )
-        self.root.resizable(False, False)
+        self.root.resizable(True, True)
 
         self.root.config(
             bg=self.colors["BACKGROUND"]
@@ -222,6 +222,18 @@ class TicTacToeGUI:
             fg=self.colors["WHITE"]
         )
 
+        self.statistics_button.config(
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        self.history_button.config(
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
         self.reset_score_button.config(
             bg="#E67E22",
             fg=self.colors["WHITE"]
@@ -371,7 +383,7 @@ class TicTacToeGUI:
             bg=self.colors["BACKGROUND"]
         )
 
-        self.board_frame.pack(pady=15)
+        self.board_frame.pack(pady=8)
 
         for row in range(3):
 
@@ -398,8 +410,8 @@ class TicTacToeGUI:
                 button.grid(
                     row=row,
                     column=col,
-                    padx=10,
-                    pady=10
+                    padx=7,
+                    pady=7
                 )
 
                 button_row.append(button)
@@ -420,7 +432,7 @@ class TicTacToeGUI:
             fg=self.colors["TEXT_COLOR"]
         )
 
-        self.status_label.pack(pady=10)
+        self.status_label.pack(pady=5)
 
     # ==================================================
     # CONTROLS
@@ -433,8 +445,11 @@ class TicTacToeGUI:
             bg=self.colors["BACKGROUND"]
         )
 
-        self.control_frame.pack(pady=5)
+        self.control_frame.pack(
+            pady=2
+        )
 
+        # Restart Game
         self.restart_button = tk.Button(
             self.control_frame,
             text="🔄 Restart Game",
@@ -444,45 +459,64 @@ class TicTacToeGUI:
             font=config.RESET_FONT,
             relief="raised",
             bd=3,
-            width=18
+            width=18,
+            height=1
         )
 
-        self.restart_button.pack(pady=5)
-
-        self.reset_score_button = tk.Button(
-            self.control_frame,
-            text="🗑️ Reset Scores",
-            command=self.reset_scores,
-            bg="#E67E22",
-            fg=self.colors["WHITE"],
-            font=("Arial", 11, "bold"),
-            width=18
+        self.restart_button.pack(
+            pady=2
         )
 
-        self.reset_score_button.pack(pady=5)
+    # Game Statistics
         self.statistics_button = tk.Button(
             self.control_frame,
-            text="📊 Statistics",
+            text="📊 Game Statistics",
             command=self.show_statistics,
             bg=self.colors["BUTTON_BG"],
             fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"],
             font=("Arial", 11, "bold"),
-            width=18
+            width=18,
+            height=1
         )
 
+        self.statistics_button.pack(
+            pady=2
+        )
+
+    # Game History
         self.history_button = tk.Button(
             self.control_frame,
             text="📜 Game History",
             command=self.show_history,
             bg=self.colors["BUTTON_BG"],
             fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"],
             font=("Arial", 11, "bold"),
-            width=18
+            width=18,
+            height=1
         )
 
-        self.history_button.pack(pady=5)
+        self.history_button.pack(
+            pady=2
+        )
 
-        self.statistics_button.pack(pady=5)
+    # Reset Scores
+        self.reset_score_button = tk.Button(
+            self.control_frame,
+        text="🗑️ Reset Scores",
+        command=self.reset_scores,
+        bg="#E67E22",
+        fg=self.colors["WHITE"],
+        activebackground="#D35400",
+        font=("Arial", 11, "bold"),
+        width=18,
+        height=1
+    )
+
+        self.reset_score_button.pack(
+            pady=2
+    )
 
     # ==================================================
     # FOOTER
@@ -500,7 +534,7 @@ class TicTacToeGUI:
 
         self.footer.pack(
             side="bottom",
-            pady=10
+            pady=3
         )
 
     # ==================================================
@@ -750,7 +784,7 @@ class TicTacToeGUI:
                 "All scores have been reset."
             )
 
-    # ==================================================
+        # ==================================================
     # GAME HISTORY
     # ==================================================
 
@@ -759,14 +793,18 @@ class TicTacToeGUI:
         history_window = tk.Toplevel(self.root)
 
         history_window.title("📜 Game History")
-        history_window.geometry("650x500")
-        history_window.resizable(False, False)
+        history_window.geometry("800x600")
+        history_window.resizable(True, True)
+        history_window.minsize(700, 500)
 
         history_window.config(
             bg=self.colors["BACKGROUND"]
         )
 
-        # Title
+        # ==================================================
+        # TITLE
+        # ==================================================
+
         tk.Label(
             history_window,
             text="📜 Game History",
@@ -775,31 +813,213 @@ class TicTacToeGUI:
             fg=self.colors["TEXT_COLOR"]
         ).pack(pady=15)
 
-        history = self.history_manager.get_history()
+        # ==================================================
+        # FILTER FRAME
+        # ==================================================
 
-        if not history:
+        filter_frame = tk.Frame(
+            history_window,
+            bg=self.colors["BACKGROUND"]
+        )
 
-            tk.Label(
-                history_window,
-                text="No games recorded yet.",
-                font=("Arial", 12),
-                bg=self.colors["BACKGROUND"],
-                fg=self.colors["TEXT_COLOR"]
-            ).pack(pady=30)
+        filter_frame.pack(pady=5)
 
-        else:
+        # Result filter
+        tk.Label(
+            filter_frame,
+            text="Result:",
+            font=("Arial", 10, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).grid(row=0, column=0, padx=5)
 
-            history_frame = tk.Frame(
-                history_window,
-                bg=self.colors["BACKGROUND"]
+        result_var = tk.StringVar(value="All")
+
+        result_menu = tk.OptionMenu(
+            filter_frame,
+            result_var,
+            "All",
+            "X",
+            "O",
+            "Draw"
+        )
+
+        result_menu.config(
+            width=8,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        result_menu.grid(row=0, column=1, padx=5)
+
+        # Difficulty filter
+        tk.Label(
+            filter_frame,
+            text="Difficulty:",
+            font=("Arial", 10, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).grid(row=0, column=2, padx=5)
+
+        difficulty_var = tk.StringVar(value="All")
+
+        difficulty_menu = tk.OptionMenu(
+            filter_frame,
+            difficulty_var,
+            "All",
+            "Easy",
+            "Medium",
+            "Hard"
+        )
+
+        difficulty_menu.config(
+            width=10,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        difficulty_menu.grid(row=0, column=3, padx=5)
+
+        # Theme filter
+        tk.Label(
+            filter_frame,
+            text="Theme:",
+            font=("Arial", 10, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).grid(row=0, column=4, padx=5)
+
+        theme_var = tk.StringVar(value="All")
+
+        theme_menu = tk.OptionMenu(
+            filter_frame,
+            theme_var,
+            "All",
+            "Light",
+            "Dark"
+        )
+
+        theme_menu.config(
+            width=8,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        )
+
+        theme_menu.grid(row=0, column=5, padx=5)
+
+        # ==================================================
+        # HISTORY DISPLAY
+        # ==================================================
+
+        display_frame = tk.Frame(
+            history_window,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        display_frame.pack(
+            fill="both",
+            expand=True,
+            padx=20,
+            pady=15
+        )
+
+        canvas = tk.Canvas(
+            display_frame,
+            bg=self.colors["BACKGROUND"],
+            highlightthickness=0
+        )
+
+        scrollbar = tk.Scrollbar(
+            display_frame,
+            orient="vertical",
+            command=canvas.yview
+        )
+
+        history_frame = tk.Frame(
+            canvas,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        history_frame.bind(
+            "<Configure>",
+            lambda event: canvas.configure(
+                scrollregion=canvas.bbox("all")
             )
+        )
 
-            history_frame.pack(
-                fill="both",
-                expand=True,
-                padx=20,
-                pady=10
-            )
+        canvas.create_window(
+            (0, 0),
+            window=history_frame,
+            anchor="nw"
+        )
+
+        canvas.configure(
+            yscrollcommand=scrollbar.set
+        )
+
+        canvas.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
+
+        scrollbar.pack(
+            side="right",
+            fill="y"
+        )
+
+        # ==================================================
+        # DISPLAY HISTORY
+        # ==================================================
+
+        def display_history():
+
+            for widget in history_frame.winfo_children():
+                widget.destroy()
+
+            result = result_var.get()
+            difficulty = difficulty_var.get()
+            theme = theme_var.get()
+
+            # Start with all games
+            games = self.history_manager.get_history()
+
+            # Apply result filter
+            if result != "All":
+                games = [
+                    game for game in games
+                    if game.get("result") == result
+                ]
+
+            # Apply difficulty filter
+            if difficulty != "All":
+                games = [
+                    game for game in games
+                    if game.get("difficulty") == difficulty
+                ]
+
+            # Apply theme filter
+            if theme != "All":
+                games = [
+                    game for game in games
+                    if game.get("theme") == theme
+                ]
+
+            # No records
+            if not games:
+
+                tk.Label(
+                    history_frame,
+                    text="No matching games found.",
+                    font=("Arial", 12, "bold"),
+                    bg=self.colors["BACKGROUND"],
+                    fg=self.colors["TEXT_COLOR"]
+                ).pack(pady=30)
+
+                return
 
             # Header
             headers = [
@@ -817,7 +1037,7 @@ class TicTacToeGUI:
                     font=("Arial", 10, "bold"),
                     bg=self.colors["HEADER_BG"],
                     fg=self.colors["WHITE"],
-                    width=17
+                    width=20
                 ).grid(
                     row=0,
                     column=column,
@@ -825,8 +1045,8 @@ class TicTacToeGUI:
                     pady=1
                 )
 
-            # History records
-            for row, game in enumerate(history, start=1):
+            # Records
+            for row, game in enumerate(games, start=1):
 
                 values = [
                     game.get("date", ""),
@@ -843,7 +1063,7 @@ class TicTacToeGUI:
                         font=("Arial", 10),
                         bg=self.colors["BUTTON_BG"],
                         fg=self.colors["TEXT_COLOR"],
-                        width=17
+                        width=20
                     ).grid(
                         row=row,
                         column=column,
@@ -851,7 +1071,68 @@ class TicTacToeGUI:
                         pady=1
                     )
 
-        # Close button
+            # Result count
+            tk.Label(
+                history_frame,
+                text=f"Showing {len(games)} game(s)",
+                font=("Arial", 10, "bold"),
+                bg=self.colors["BACKGROUND"],
+                fg=self.colors["TEXT_COLOR"]
+            ).grid(
+                row=len(games) + 1,
+                column=0,
+                columnspan=4,
+                pady=10
+            )
+
+        # ==================================================
+        # FILTER BUTTON
+        # ==================================================
+
+        tk.Button(
+            filter_frame,
+            text="🔍 Apply",
+            command=display_history,
+            font=("Arial", 10, "bold"),
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        ).grid(
+            row=0,
+            column=6,
+            padx=10
+        )
+
+        # ==================================================
+        # RESET FILTERS
+        # ==================================================
+
+        tk.Button(
+            filter_frame,
+            text="↻ Reset",
+            command=lambda: (
+                result_var.set("All"),
+                difficulty_var.set("All"),
+                theme_var.set("All"),
+                display_history()
+            ),
+            font=("Arial", 10, "bold"),
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        ).grid(
+            row=0,
+            column=7,
+            padx=5
+        )
+
+        # Show initial history
+        display_history()
+
+        # ==================================================
+        # CLOSE BUTTON
+        # ==================================================
+
         tk.Button(
             history_window,
             text="Close",
@@ -878,7 +1159,8 @@ class TicTacToeGUI:
 
         stats_window.title("📊 Game Statistics")
         stats_window.geometry("400x500")
-        stats_window.resizable(False, False)
+        stats_window.resizable(True, True)
+        stats_window.minsize(400, 500)
 
         stats_window.config(
             bg=self.colors["BACKGROUND"]

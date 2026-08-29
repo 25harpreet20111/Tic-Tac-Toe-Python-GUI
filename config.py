@@ -6,7 +6,7 @@
 
 WINDOW_TITLE = "🎮 Tic Tac Toe - Modern Edition"
 WINDOW_WIDTH = 500
-WINDOW_HEIGHT = 650
+WINDOW_HEIGHT = 850
 
 
 # --------------------------------------------------
