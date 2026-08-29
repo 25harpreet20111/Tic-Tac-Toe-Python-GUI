@@ -460,6 +460,17 @@ class TicTacToeGUI:
         )
 
         self.reset_score_button.pack(pady=5)
+        self.statistics_button = tk.Button(
+            self.control_frame,
+            text="📊 Statistics",
+            command=self.show_statistics,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            font=("Arial", 11, "bold"),
+            width=18
+        )
+
+        self.statistics_button.pack(pady=5)
 
     # ==================================================
     # FOOTER
@@ -726,3 +737,197 @@ class TicTacToeGUI:
                 "Scores Reset",
                 "All scores have been reset."
             )
+        # ==================================================
+    # SHOW STATISTICS
+    # ==================================================
+
+    def show_statistics(self):
+
+        statistics = self.history_manager.get_statistics()
+        win_rates = self.history_manager.get_win_rates()
+        difficulty_stats = (
+            self.history_manager.get_difficulty_statistics()
+        )
+
+        stats_window = tk.Toplevel(self.root)
+
+        stats_window.title("📊 Game Statistics")
+        stats_window.geometry("400x500")
+        stats_window.resizable(False, False)
+
+        stats_window.config(
+            bg=self.colors["BACKGROUND"]
+        )
+
+        # ==================================================
+        # HEADER
+        # ==================================================
+
+        header = tk.Label(
+            stats_window,
+            text="📊 GAME STATISTICS",
+            font=("Arial", 18, "bold"),
+            bg=self.colors["HEADER_BG"],
+            fg=self.colors["WHITE"]
+        )
+
+        header.pack(
+            fill="x",
+            pady=(0, 15)
+        )
+
+        # ==================================================
+        # GAME STATISTICS
+        # ==================================================
+
+        stats_frame = tk.Frame(
+            stats_window,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        stats_frame.pack(
+            fill="x",
+            padx=25
+        )
+
+        labels = [
+            (
+                "🎮 Total Games",
+                statistics["total_games"]
+            ),
+            (
+                "❌ X Wins",
+                statistics["x_wins"]
+            ),
+            (
+                "⭕ O Wins",
+                statistics["o_wins"]
+            ),
+            (
+                "🤝 Draws",
+                statistics["draws"]
+            ),
+        ]
+
+        for label, value in labels:
+
+            tk.Label(
+                stats_frame,
+                text=f"{label}: {value}",
+                font=("Arial", 12, "bold"),
+                anchor="w",
+                bg=self.colors["BACKGROUND"],
+                fg=self.colors["TEXT_COLOR"]
+            ).pack(
+                fill="x",
+                pady=5
+            )
+
+        # ==================================================
+        # WIN RATES
+        # ==================================================
+
+        tk.Label(
+            stats_window,
+            text="🏆 WIN RATES",
+            font=("Arial", 14, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).pack(pady=(20, 10))
+
+        rate_frame = tk.Frame(
+            stats_window,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        rate_frame.pack(
+            fill="x",
+            padx=25
+        )
+
+        rates = [
+            (
+                "❌ X Win Rate",
+                win_rates["x_win_rate"]
+            ),
+            (
+                "⭕ O Win Rate",
+                win_rates["o_win_rate"]
+            ),
+            (
+                "🤝 Draw Rate",
+                win_rates["draw_rate"]
+            ),
+        ]
+
+        for label, value in rates:
+
+            tk.Label(
+                rate_frame,
+                text=f"{label}: {value:.2f}%",
+                font=("Arial", 11, "bold"),
+                anchor="w",
+                bg=self.colors["BACKGROUND"],
+                fg=self.colors["TEXT_COLOR"]
+            ).pack(
+                fill="x",
+                pady=3
+            )
+
+        # ==================================================
+        # DIFFICULTY STATISTICS
+        # ==================================================
+
+        tk.Label(
+            stats_window,
+            text="🤖 GAMES BY DIFFICULTY",
+            font=("Arial", 14, "bold"),
+            bg=self.colors["BACKGROUND"],
+            fg=self.colors["TEXT_COLOR"]
+        ).pack(pady=(20, 10))
+
+        difficulty_frame = tk.Frame(
+            stats_window,
+            bg=self.colors["BACKGROUND"]
+        )
+
+        difficulty_frame.pack(
+            fill="x",
+            padx=25
+        )
+
+        for difficulty in ["Easy", "Medium", "Hard"]:
+
+            count = difficulty_stats.get(
+                difficulty,
+                0
+            )
+
+            tk.Label(
+                difficulty_frame,
+                text=f"{difficulty}: {count}",
+                font=("Arial", 11, "bold"),
+                anchor="w",
+                bg=self.colors["BACKGROUND"],
+                fg=self.colors["TEXT_COLOR"]
+            ).pack(
+                fill="x",
+                pady=2
+            )
+
+        # ==================================================
+        # CLOSE BUTTON
+        # ==================================================
+
+        tk.Button(
+            stats_window,
+            text="Close",
+            command=stats_window.destroy,
+            font=("Arial", 11, "bold"),
+            width=15,
+            bg=self.colors["BUTTON_BG"],
+            fg=self.colors["TEXT_COLOR"],
+            activebackground=self.colors["BUTTON_ACTIVE"]
+        ).pack(
+            pady=20
+        )
